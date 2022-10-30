@@ -1,0 +1,14 @@
+Have two seperate docker servers:
+1. Build Server
+2. Deployment Server
+
+Dockerfile creates images which leads to the creation of containers
+
+Images are obtained from registry (Docker Hub)
+
+Push images from docker build server to dockerhub
+- docker push 
+- now have image repos that can be private or public
+
+Pull images into the docker deployment server
+- 

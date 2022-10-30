@@ -1,0 +1,459 @@
+aws = Amazon  WEB SERVICES:
+  1. server resources / infrastructures 
+      ec2-instances
+      server-vm-ec2/java-tomcat/webapps/app.war
+  
+  1b. containers resources / infrastructures 
+       ECS / ECR / eks   
+
+  2. serverles resources/ infrastructures
+       Lambda 
+       fargate profile 
+
+   3. storage recources
+       EBS = ELASTIC BLOCK STORE  (ebs-jenkins-vol )
+         We mount the root file system using EBS VOLUME
+         /etc /bin /home /opt  /app 
+         The R/W speed is very fast with EBS
+         It is use equally to boot-up (start) servers  
+          the OS of a server must load before it starts 
+
+       EFS/NFS = ELASTIC FILE SYSTEM 
+          dbServer1 
+             /app
+             touch names.txt 
+          dbServer2 
+             /app
+          dbServer3 
+            /app        
+       S3  =  object storage
+              log files / audio files / videos / 
+              archives -- 2010logs.zip 
+              artifacts -- app.war
+              data migration 
+              versioning   
+              costing strategy:
+                   standard=Frequent access ---> $50k   5ms  
+                   IA - InFrequent access        $25k   50ms
+                   Reduce redundancy             $15k   900ms
+                   Glacier                       $5k    5000ms             s3 storgae classes:
+Account Manager  
+DevOps Manager  
+  5ms  
+Black Panther 1 -3 years 5m per month    
+3+ years   100k request
+5+ years   10k request   
+10+ year   1k request 
+
+
+  Netflix ---> 
+  4. security resources:
+       IAM ---> 
+       VPC and its components ---> 
+         private subnets [db, apps] 
+         public subnets [web, Jumpserver]
+         Route Tables 
+       Security Groups 
+       private key pair
+       NACL 
+       Secret managers 
+       Paramenter store 
+       WAF 
+       ELB [users--->elb---applications]
+  5. DATABASES :
+       RDS [mySQL, mariaDB]
+       nonRDS [dynamoDB,]
+  6. Networking resources
+        VPC / VPN 
+        Route53
+
+This are not the complete services of AWS:
+  AWS SOLUTION ARCHITECT COURSE ----
+
+AWS SOLUTION ARCHITECT Certified 
+95% has zero certification  
+You will apply for a job as someone with experience:
+
+Difference between Containers and Virtual Machines:
+Each virtual machine contains the app, binaries and libraries and
+an entire guest operating system
+Containes included the app and dependencies but share the kernel with other containers
+
+What is a docker image:
+An image is a lightweight, stand-alone, executable 
+package that includes everything needed to run a piece 
+of software, including the code, a runtime, libraries, 
+environment variables, and config files.
+
+Used to create containers
+
+
+
+Docker 
+======
+Docker is a containerisation software used to package 
+applications and all its dependencies. 
+With docker applications runs seamlessly in all Environments. 
+   application code = app.war, td.war, boa.war     
+   dependencies     = tomcat, java 
+
+   application code = app.ear, td.ear, boa.ear  
+   dependencies     = jboss, java    
+
+   application code = app.jar, td.jar, boa.jar  
+   dependencies     = java 
+
+   application code = app.js    
+   dependencies     = npm  
+We maintain 3 Environments: 
+    dev,     QA,      UAT,          prod  
+    working  working  not-working   not working 
+
+In Dominion we manage 4 Environments 
+   Dev 
+   stage 
+   uat/pre-prod 
+   prod 
+
+We maintain a minimun of 3 ENVIRONMENTS = 
+   dev ---> 
+   stage/testing  -->
+   production --> 
+
+  dev branch --> developed -- build -- tested (Unit Testing)
+     --> deploy (TomcatServer - VM)
+       running well 
+  QA branch --> developed -- build -- tested (add Testing) 
+    --> deploy (VM) 
+        running well
+  Stage branch --> developed -- build -- tested (add Testing)
+   --> deploy (VM)
+         NOT running well
+
+docker process:
+ docker:
+  images
+     app.war + tomcat & java  
+  containers  
+  Dockerfile----image---containers 
+
+Docker Editions:
+    Docker CE --> Comunity Edition --> Open Source (Free)
+    Docker EE --> Enterprise Edition --> Commercial
+
+Type: Containerization
+Vendor: Docker INC
+
+Installation:
+O.S --> Cross Platform (Docker can be installed in any O.S)
+        Linux -- CentOS / ubuntu / redhat
+        Windows --- 
+
+Assignment---> Install docker desktop on your personal computer
+
+    Docker Can Be Installed in Linux, Windows OS, mac OS, etc.  
+
+Docker CE Can be installed in Most of the linux distribution except redhat.
+         ubuntu /  centos / Amazon Linux
+
+Docker EE can installed in all O.S including redhat.
+Docker CE --> OpenSource Free  
+
+Docker EE --> Commerical :
+   DTR --> Docker Trusted Registry(Private Repo to keep docker images)
+   UCP --> Universal Control Plane --> It's GUI for managing Docker Machines
+
+Containerzation Platforms/Softwares.     :
+    Docker,     = 80%
+    CoreOS,     = 9%
+    Rocket --   = 6%
+    Container-D = 5%
+
+Docker Container--> It's a runtime instance of a docker image
+                    where our application is running.
+
+     The standard unit where the application service is deployed or running.
+
+ GitHub / 
+ Nexus 
+ images 
+
+  Code are managed by SCM = GitHub 
+  Packages (app.war) are uploaded and managed in Nexus/JFrog 
+  Docker images are stored and/or managed in dockerhub/Registries 
+
+Docker Repo/Registry. --> We can store and share docker images.   
+
+    Public Repo --> Docker hub 
+       is It is generally a public repo. 
+      Which contains all the open source softwares as  a docker images. 
+       We can think of docker hub as play store for docker images.
+
+    Private Repo (ECR, Nexus, JFrog, D.T.R(Docker Trusted Registory)) --> 
+            We can store and share the docker images within our company
+        network using private repos
+
+
+ PaaS  = 
+ IaaS  = EC2
+ SaaS  = DockerHub, New Relic, GitHub, SonarCloud
+
+ Explain your experience in managing SaaS Platforms/solutions??
+
+ What is docker hub?
+It's a public repository for docker images. You can think as play store for
+docker images.
+
+First Create Account in docker hub
+    https://hub.docker.com
+    docker push landmark29/app:tagname
+
+#!/bin/bash
+sudo hostname docker
+sudo hostnamectl set hostname docker  
+sudo apt update -y 
+sudo apt install docker.io -y
+sudo usermod -aG docker ubuntu 
+sudo su - ubuntu
+=========================
+Docker commands need admins right or
+ sudo priviledges to run docker commands 
+===================================
+mylandmarktech/maven-web-app
+
+image = app code + dependencies  
+container = running instance of docker image
+
+docker run -d -p 80:8080 \
+ mylandmarktech/maven-web-app
+=================================
+===================================
+docker comes with:
+  docker engine/daemon ---  performs tasks  
+  docker cli           --- docker 
+
+docker 
+
+add user group to docker group:
+sudo usermod -G docker kk
+
+Docker commands:
+  docker info 
+  docker --version 
+  docker build = create a docker image 
+
+https://github.com/LandmakTechnology/maven-web-application
+
+https://github.com/LandmakTechnology/tesla-app
+  tesla-app/src pom.xml Dockerfile   
+
+FROM tomcat:8.0.20-jre8
+COPY target/*war /usr/local/tomcat/webapps/
+
+
+FROM is a Dockerfile keyword that
+  defines the base image (dependencies)  
+COPY  
+
+docker build -t image:1 .  
+docker images  = this display all docker images
+docker run -d -p 8080:8080 --name app image:1   
+docker run -d -p 8000:8080 --name app2 image:1  
+docker run -d -p 8000:8080 --name app3 image:1
+
+docker run -d -p hostPort:ContainerPort --name containerName image:tag/version   
+    where:
+      -d = detachable mode  
+      -p = port forwarding/mapping    
+
+port is already allocated. 
+
+Dockerfile ---> Image ---- Containers  
+
+Docker images commands:  
+====================
+- docker build   - create a docker image from a Dockerfile
+  https://github.com/LandmakTechnology/tesla-app
+
+  FROM tomcat:8.0.20-jre8
+  COPY target/*war /usr/local/tomcat/webapps/app.war  
+
+  FROM jboss/wildfly
+  ADD target/*war /opt/jboss/wildfly/standalone/deployments/
+
+  web applications car be deployed in:
+    tomcat and/or jboss/wildfly
+
+  docker build -t myimage .   = building from the default Dockerfile  in pwd  
+  docker build -t myimage -f dc . = building from a custom Dockerfile [dc] in pwd 
+  docker build -t myimage -f dc /tmp =building from a custom Dockerfile [dc] in /tmp 
+     docker build -t myimage -f dc /home/landmark/tesla-app
+
+- docker pull    - pull images from the Registry  
+  docker pull sonarqube
+  docker run -d -p 5000:9000 --name sonar sonarqube
+  curl -v localhost:5000 
+  http://localhost:5000/projects/create
+
+Imges to pull from dockerhub:
+  open source images []   
+  custom image
+
+    docker tag       = rename an image  
+    docker imags ls  
+    docker images    
+    http://44.211.63.229:7000/
+    http://44.211.63.229:7000/tesla  
+
+   docker build -t myimage 
+   docker tag myimage:latest mylandmarktech/wfapp:29  
+   docker push mylandmarktech/wfapp:29  
+   docker login -u mylandmarktech -p admin123
+   docker login -u mylandmarktech
+
+Docker images commands:
+  docker build   = create images  
+  docker tag  = assigns repository name to images 
+  docker images    = list images
+  docker image ls  = list images
+  docker images -q = list image ids 
+
+  docker rmi imageID/name:tag     = delete an image
+  docker rmi -f imageID/name:tag  = force delete an image
+  docker rmi -f a848f84f4894 
+  docker rmi -f  $(docker images -q) = deletes all images 
+  docker run image2 
+
+Docker containers related commands:
+  containers are created from docker images  
+  a container is a running process/instance of an image 
+
+  docker pull mylandmarktech/java-web-app 
+  docker pull mylandmarktech/java-web-app:20   
+  docker scan mylandmarktech/java-web-app 
+  docker create --name -d -p 3000:8080 --name myapp mylandmarktech/java-web-app
+  docker start myapp  
+  docker run --name myapp -d -p 3000:8080  mylandmarktech/java-web-app
+     pull + create and start the container  
+  Container modes:
+    -detachable mode  -d   
+    -interactive mode -it 
+
+curl -v 44.211.63.229:3000/java-web-app
+
+docker run --name webapp -d -p 80:80 mylandmarktech/hello  
+
+  docker ps -          = list running containers 
+  docker container ls  = list running containers 
+  docker ps -q = list running containers IDs 
+  docker ps -a  = list running & stopped/excited containers
+  docker ps -aq = list running & stopped/excited containers IDs 
+
+List ONLY stopped Containers
+=================================
+docker ps -aq --filter  status="exited" 
+docker ps -a --filter  status="exited" 
+
+List Running Containers
+=======================
+docker ps -a --filter  status="running" 
+docker ps 
+docker container ls
+
+List All Containers
+==================
+docker ps -a
+docker container ls -a
+
+List only running container ids
+==============================
+docker ps -q
+docker container ls -q
+
+
+List all container ids
+==============================
+docker ps -aq
+docker container ls -aq
+
+Delete excited/stopped Containers
+================================
+  docker rm containerId/Name
+---
+Delete excited/stopped Containers
+================================
+  docker rm containerId/Name
+
+Delete running Containers
+================================
+  docker rm -f containerId/Name
+  docker stop containerId/Name && docker rm containerId/Name
+
+Delete all Containers
+================================
+  How to delete all containers
+  docker rm -f $(docker ps -aq)
+
+Delete all stopped Containers
+================================
+docker rm $(docker ps -aq --filter  status="exited")
+
+docker rm --help 
+   FROM CPA to a Sr. DevOps Engineer
+   166k plus  = 185k plus 
+
+
+Start the container
+===================
+docker start <containerId/Name>
+docker start myapp
+
+stop/kill the container
+========================
+  docker stop <containerId/Name>
+    gives warning before stopping the container process 
+  docker kill <containerId/Name>
+    gives no warning before stopping the container process  
+
+pause/unpause 
+============
+    docker pause <containerId/Name>
+    docker unpause <containerId/Name>
+
+How to resolves issues occuring in a docker container??
+How to troubleshoot or debug applications running as containers? :
+1. docker ps  = will check if the container is running  
+2. docker ps -a = will check if the container is in "exited status"
+   docker ps -a --filter status="exited"
+   limited cpu/ram, port conflict/binding, address/name already in use  
+3. docker top   = check resources 
+4. docker logs  = check the logs 
+5. docker exec  = run command inside the container
+   docker exec -it app29   /bin/bash
+6. docker stats
+7. docker inspect  
+8. docker attach 
+
+Dockerfiles:
+Jenkins-docker integration  
+  server = Windows/Linux/MacOS has 0-65355 ports  
+    0-1024  
+ Container = 0-65355 
+
+  FROM jboss/wildfly
+  EXPOSE 8080 
+  ADD target/*war /opt/jboss/wildfly/standalone/deployments/
+ 
+
+ docker run -d -p hostPort:ContainerPort  mylandmarktech/java-web-app 
+ docker run -d -p 3000:8080 mylandmarktech/java-web-app 
+ docker run -d -p 8000:8080 mylandmarktech/java-web-app
+
+ netstat -tulpn  
+ Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name 
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      -                
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                
+
+A server got
+
+ 
